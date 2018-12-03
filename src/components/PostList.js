@@ -3,7 +3,6 @@ import propTypes from 'prop-types'
 import {Link, Route} from 'react-router-dom'
 
 import Post from './Post'
-import Search from './Search'
 import ModifiedPost from '../containers/ModifiedPost';
 
 class PostList extends React.Component {
@@ -12,6 +11,7 @@ class PostList extends React.Component {
         this.state = {
             isEnableForm: false
         }
+
         this.enableForm = this.enableForm.bind(this)
         this.closeForm= this.closeForm.bind(this)
     }
@@ -30,12 +30,14 @@ class PostList extends React.Component {
     render() {
         const { posts, toggleFavorite, deletePost } = this.props
         const { currentPost, isEnableForm } = this.state
-
+        
         return (
-            <div>
-                <h1>Hello World</h1>
-                <Link to='/search'>Add new item</Link>
-                <div className="grid-container">
+            <div className="collection-container">
+                <div className="action-list">
+                    <Link to='/search' className="button">Add new item</Link>
+                </div>
+                
+                <div className="collection-posts">
                     {
                         isEnableForm &&
                         <ModifiedPost isNew={false} post={currentPost} close={this.closeForm}/>

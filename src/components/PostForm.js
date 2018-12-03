@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import { Redirect } from 'react-router-dom'
 
 class PostForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            post: props.post
+            post: props.post,
+            redirect: null
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSave = this.handleSave.bind(this)
@@ -19,7 +21,7 @@ class PostForm extends Component {
     }
 
     handleSave() {
-        let { isNew, addPost, updatePost } = this.props
+        let { isNew, addPost, updatePost, close } = this.props
         let { post } = this.state
         let posts = JSON.parse(localStorage.getItem('posts'))
         
@@ -28,52 +30,64 @@ class PostForm extends Component {
             posts.push(post)
             localStorage.setItem('posts', JSON.stringify(posts))
             addPost(post)
+            this.setState({redirect: true}, () => close())
         } else {
             posts = posts.map(p => p.id === post.id ? post : p )
-            
             localStorage.setItem('posts', JSON.stringify(posts))
             updatePost(post)
+            this.setState({redirect: true}, () => close())
         }
     }
 
     render() {
-        const { addPost, updatePost, isNew } = this.props
+        const { isNew, close } = this.props
         let { title, description, mediaType, links, href } = this.state.post
         links = mediaType == 'image' ? links : [{href: 'No link for this media type'}]
-        
+
+        if(this.state.redirect) {
+            return <Redirect to='/'/>;
+        }
+
         return (
-            <div>
-                <h3>Add to collection</h3>
-                <div>
-                    <input value={title} onChange={this.handleChange} name="title"/>
-                    <span className="floating-label">Title</span>
+            <div className="modal">
+                <div className="modal-content">
+                    <span className="close" onClick={close}>&times;</span>
+                    <h3>Add to collection</h3>
+                    <div>
+                        <label>Title</label>
+                        <input type="text" value={title} onChange={this.handleChange} name="title"/>
+                    </div>
+            
+                    <div>
+                        <label>Description</label>
+                        <textarea value={description} onChange={this.handleChange} name="description"/>
+                    </div>
+            
+                    <div>
+                        <label>Type</label>
+                        <select name="mediaType" value={mediaType || 'image'} onChange={this.handleChange}>
+                            <option value="audio">Audio</option>
+                            <option value="image">Image</option>
+                            <option value="video">Video</option>
+                        </select>
+                    </div>
+            
+                    <div>
+                        <label>Link preview image</label>
+                        <input type="text" value={links[0].href} onChange={this.handleChange} name="links"/>
+                    </div>
+            
+                    <div>
+                        <label>Link file url</label>
+                        <input type="text" value={href} onChange={this.handleChange} name="href"/>
+                    </div>
+                    {
+                        isNew && <button onClick={this.handleSave} className="button">Add to collection</button>
+                    }
+                    {
+                        !isNew && <button onClick={this.handleSave} className="button">Save</button>
+                    }
                 </div>
-        
-                <div>
-                    <input value={description} onChange={this.handleChange} name="description"/>
-                    <span className="floating-label">Description</span>
-                </div>
-        
-                <div>
-                    <input value={mediaType} onChange={this.handleChange} name="mediaType"/>
-                    <span className="floating-label">Type</span>
-                </div>
-        
-                <div>
-                    <input value={links[0].href} onChange={this.handleChange} name="links"/>
-                    <span className="floating-label">Link preview image</span>
-                </div>
-        
-                <div>
-                    <input value={href} onChange={this.handleChange} name="href"/>
-                    <span className="floating-label">link file url</span>
-                </div>
-                {
-                    isNew && <button onClick={this.handleSave}>Add to collection</button>
-                }
-                {
-                    !isNew && <button onClick={this.handleSave}>Save</button>
-                }
             </div>
         )
     }

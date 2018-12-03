@@ -8,19 +8,19 @@ const Post = ({ toggleFavorite, enableEdit, deletePost, ...props }) => (
             <MediaPreview {...props} />
         </div>
         <label className="type">{props.mediaType}</label>
-        <label className="date">{moment(props.date).format('LL')}</label>
-        <h3 className="title">{props.title}</h3>
-        <p className="desc">{props.description}</p>
+        <label className="date">{moment(props.date).format('ll')}</label>
+        <label className="title">{props.title}</label>
+        <div className="desc">{props.description}</div>
         {
             props.isInCollection &&
-            <div  className="icon">
-                <button className="button" onClick={()=> toggleFavorite(props.id)}>
+            <div  className="icons">
+                <button className="btn fav" onClick={()=> toggleFavorite(props.id)}>
                     <i className={props.favorite ? "fa fa-heart" : "fa fa-heart-o"}/>  
                 </button>
-                <button className="button" onClick={enableEdit}>
+                <button className="btn edit" onClick={enableEdit}>
                     <i className="fa fa-pencil" />  
                 </button>
-                <button className="button" onClick={()=> deletePost(props.id)}>
+                <button className="btn delete" onClick={()=> deletePost(props.id)}>
                     <i className="fa fa-trash" />  
                 </button>
             </div>

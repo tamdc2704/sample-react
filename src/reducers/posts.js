@@ -48,12 +48,12 @@ if(!data) localStorage.setItem('posts', JSON.stringify(fakeData))
 
 data = JSON.parse(localStorage.getItem('posts'))
 
-const posts = (state = data, {type, payload}) => {  
+const posts = (state = data, {type, payload}) => {
     switch(type) {
         case 'ADD_POST':
             return [
                 ...state,
-                payload
+                payload.post
             ]
         case 'UPDATE_POST':
             return state.map(post => post.id === payload.post ? payload.post : post)

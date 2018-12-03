@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 
 class Search extends Component {
     constructor(props) {
-        console.log('sidane')
         super(props)
         this.state = {
             posts: [],
@@ -57,26 +56,34 @@ class Search extends Component {
         const { posts, isEnableForm, currentPost } = this.state
 
         return(
-            <div>
+            <div className="search-container">
                 {
                     isEnableForm && <ModifiedPost post={currentPost} close={this.closeForm} isNew/>
                 }
-                <Link to='/'>Back to Collection</Link>
-                <h1>Search from Nasa</h1>
-                <input 
-                    placeholder="Type something to search..."
-                    onKeyPress={this.handleSearch.bind(this)}
-                    ref={this.myRef}
-                />
-                {
-                    posts.map( post => (
-                        <Post 
-                            key={post.data[0].nasa_id}
-                            {...this.formatedPost(post)}
-                            enableForm={() => this.enableForm(post)}
-                        />
-                    ))
-                }
+                <div className="search-action">
+                    <Link to='/' className="button">Back to Collection</Link>
+                </div>
+
+                <div className="search-bar">
+                    <h1>Search from Nasa</h1>
+                    <input 
+                        placeholder="Type something to search...(ex: moon, sun)"
+                        onKeyPress={this.handleSearch.bind(this)}
+                        ref={this.myRef}
+                    />
+                </div>
+                
+                <div className="search-posts">
+                    {
+                        posts.map( post => (
+                            <Post 
+                                key={post.data[0].nasa_id}
+                                {...this.formatedPost(post)}
+                                enableForm={() => this.enableForm(post)}
+                            />
+                        ))
+                    }
+                </div>
             </div>
         )
     }
